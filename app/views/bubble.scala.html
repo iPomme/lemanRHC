@@ -1,0 +1,182 @@
+<label id="lblview">Account</label>
+<script>
+
+    // Create the canvas size and varaible to keep in cash all the JSON to parse
+    var width = 960,
+            height = 500,
+            root, CCYjson, CUSTjson, ACCjson, curType;
+    // The links and the nodes associated to the layout
+    var nodes = [],
+            links = [];
+
+    // The Layout with the nodes and links externalized to be changed later on
+    var force = d3.layout.force()
+            .nodes(nodes)
+            .links(links)
+            .linkDistance(80) //80
+            .charge(-120) // -120
+            .gravity(.05) //.05
+            .size([width, height])
+            .on("tick", tick);
+
+    // Get a reference to the svg canvas.
+    var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    // Load the JSON from the server.
+    d3.json("graphCurrency.json", function (error, jsona) {
+        CCYjson = jsona;
+    });
+    d3.json("graphAccount.json", function (error, jsonb) {
+        ACCjson = jsonb;
+        root = jsonb;
+        curType = "ACC";
+        update();
+    });
+    d3.json("graphCustomer.json", function (error, jsonc) {
+        CUSTjson = jsonc;
+    });
+
+
+    function update() {
+
+        // Clear the data from the nodes and links array without loosing the reference to the array because used in our layout.
+        nodes.length = 0;
+        links.length = 0;
+
+        // build the nodes from JSON
+        var newNodes = flatten(root);
+
+        // Add the nodes to the refered array for nodes
+        for (var i = 0; i < newNodes.length; i++) {
+            nodes.push(newNodes[i]);
+        }
+
+        // build the links from the nodes structure.
+        var newLinks = d3.layout.tree().links(nodes);
+        // Add the links to the refered array for links
+        for (var i = 0; i < newLinks.length; i++) {
+            links.push(newLinks[i]);
+        }
+
+
+        // Update the datas of the links.
+        var link = svg.selectAll(".link").data(force.links(), function (d) {
+            return d.target.id;
+        });
+        // Update the datas of the nodes.
+        var node = svg.selectAll(".node").data(nodes, function (d) {
+            return d.id;
+        });
+
+
+        // Create the links at the svg level between nodes.
+        link.enter().insert("line", ".node")
+                .attr("class", "link");
+        // When the links is removed from the data then remove it from the svg.
+        link.exit().remove();
+
+        // Create the nodes at the svg level, only missing node based on the id will be added.
+        var nodeEnter = node.enter().append("g")
+                .attr("class", "node")
+                .on("click", click)
+                .call(force.drag);
+        // Add text to the node
+        nodeEnter.append("text")
+                .attr("dy", "1.75em")
+                .text(function (d) {
+                    return d.name;
+                });
+        // Add a circle on the node based on the size of the node.
+        nodeEnter.append("circle")
+                .attr("r", function (d) {
+                    return Math.sqrt(d.size) / 10 || 4.5;
+                });
+
+        // Fill the circle with the color defined in the color function.
+        node.select("circle")
+                .style("fill", color);
+        // If the node is removed from the data then remove the svg element
+        node.exit().remove();
+
+        // Restart the force layout.
+        force.start();
+
+    }
+
+    function tick() {
+        svg.selectAll(".link").attr("x1", function (d) {
+            return d.source.x;
+        })
+                .attr("y1", function (d) {
+                    return d.source.y;
+                })
+                .attr("x2", function (d) {
+                    return d.target.x;
+                })
+                .attr("y2", function (d) {
+                    return d.target.y;
+                });
+
+        svg.selectAll(".node").attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+    }
+
+    function color(d) {
+        return d._children ? "#3182bd" // collapsed package
+                : d.children ? "#c6dbef" // expanded package
+                : "#fd8d3c"; // leaf node
+    }
+
+    // Toggle children on click.
+    function click(d) {
+        if (d3.event.defaultPrevented) return; // ignore drag
+        console.log("clicked");
+        if (d.size != undefined) { // If I click on a node
+            var jsonContext;
+            if (!(curType == d.type)) {
+                curType = d.type;
+                if (curType == "ACC") {
+                    console.log("Account clicked");
+                    document.getElementById('lblview').innerHTML = 'Account';
+                    root = ACCjson;
+                } else if (curType == "CCY") {
+                    console.log("Currency clicked");
+                    root = CCYjson;
+                    console.log(root)
+                    document.getElementById('lblview').innerHTML = 'Currency';
+                } else if (curType == "CUST") {
+                    console.log("Customer clicked");
+                    root = CUSTjson;
+                    document.getElementById('lblview').innerHTML = 'Customer';
+                }
+            }
+        } else {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+        }
+
+        update();
+    }
+
+    // Returns a list of all nodes under the root.
+    function flatten(root) {
+        var nodes = [];
+
+        function recurse(node) {
+            if (node.children) node.children.forEach(recurse);
+            nodes.push(node);
+        }
+
+        recurse(root);
+        return nodes;
+    }
+
+</script>

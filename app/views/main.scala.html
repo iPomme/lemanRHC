@@ -1,0 +1,66 @@
+@(appCss: List[String], appJs: List[String])(content: Html)(implicit lang: Lang)
+
+@import play.api.Play
+@import play.api.Play.current
+@import play.api.i18n.Messages
+
+<!doctype html>
+<html>
+<head>
+    <title>Leman</title>
+
+    <meta name="description" content="User interface for Leman">
+    <meta name="keywords" content="Integration,Connectivity-Factory,Risk,Associative">
+    <meta name="author" content="Crossing-Tech">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+
+    <link rel="shortcut icon" href="@routes.Assets.at("images/favicon.png")" type="image/png" />
+
+    @* stylesheets *@
+    @if(Play.isProd) {
+    @* bootstrap *@
+    <link rel="stylesheet" href="@routes.Assets.at("libraries/bootstrap/css/bootstrap.min.css")">
+    } else {
+
+    @* bootstrap *@
+    <link rel="stylesheet" href="@routes.Assets.at("libraries/bootstrap/css/bootstrap.css")">
+    }
+
+    @* application specific *@
+    @for(css <- appCss) {
+    <link rel="stylesheet" href="@routes.Assets.at("stylesheets/" + css)">
+    }
+
+
+    @* javascripts files (loaded here for efficiency) *@
+
+    @if(Play.isProd) {
+    @* boostrap *@
+    <script type="text/javascript" src="@routes.Assets.at("libraries/bootstrap/js/bootstrap.min.js")"></script>
+    @* ui-bootstrap *@
+    <script type="text/javascript" src="@routes.Assets.at("libraries/ui-bootstrap/ui-bootstrap-tpls-0.6.0-SNAPSHOT.min.js")"></script>
+    @* d3 *@
+    <script type="text/javascript" src="@routes.Assets.at("libraries/d3/js/d3.v3.min.js")"></script>
+    } else {
+    @* boostrap *@
+    @*<script type="text/javascript" src="@routes.Assets.at("libraries/bootstrap/js/bootstrap.js")"></script>*@
+    @* ui-bootstrap *@
+    @*<script type="text/javascript" src="@routes.Assets.at("libraries/ui-bootstrap/ui-bootstrap-tpls-0.6.0-SNAPSHOT.js")"></script>*@
+    @* d3 *@
+    <script type="text/javascript" src="@routes.Assets.at("libraries/d3/js/d3.v3.js")"></script>
+    }
+    @* application specific *@
+    @for(js <- appJs) {
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/" + js)"></script>
+    }
+
+</head>
+<body>
+
+@content
+
+
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+{
+    "name": "Accounts", "id" : "0",
+    "children": [
+        {
+            "name": "100391",
+            "id": "100391",
+            "type": "ACC",
+            "children": [
+                {
+                    "name": "CHF",
+                    "id": "10",
+                    "type": "CCY",
+                    "size": 3534
+                },
+                {
+                    "name": "Warren Buffet",
+                    "id": "30",
+                    "type": "CUST",
+                    "size": 3534
+                }
+            ]
+        },
+        {
+            "name": "100134",
+            "id": "100134",
+            "type": "ACC",
+            "children": [
+                {
+                    "name": "USD",
+                    "id": "12",
+                    "type": "CCY",
+                    "size": 3534
+                },
+                {
+                    "name": "Warren Buffet",
+                    "id": "30",
+                    "type": "CUST",
+                    "size": 3534
+                }
+            ]
+        },
+        {
+            "name": "10084",
+            "id": "10084",
+            "type": "ACC",
+            "children": [
+                {
+                    "name": "GBP",
+                    "id": "11",
+                    "type": "CCY",
+                    "size": 3534
+                },
+                {
+                    "name": "Steve Jobs",
+                    "id": "31",
+                    "type": "CUST",
+                    "size": 7840
+                }
+            ]
+        },
+        {
+            "name": "100311",
+            "id": "100311",
+            "type": "ACC",
+            "children": [
+                {
+                    "name": "USD",
+                    "id": "12",
+                    "type": "CCY",
+                    "size": 3534
+                },
+                {
+                    "name": "DELL",
+                    "id": "32",
+                    "type": "CUST",
+                    "size": 5914
+                }
+            ]
+        },
+        {
+            "name": "Customers",
+            "id": "2",
+            "children": [
+                {
+                    "name": "Name",
+                    "id": "3",
+                "children": [
+{"name": "Warren Buffet", "id" : "30","type": "CUST", "size": 3534},
+{"name": "Steve Jobs", "id" : "31","type": "CUST", "size": 7840},
+{"name": "DELL", "id" : "32","type": "CUST", "size": 5914}
+]
+}
+]
+},
+{ "name": "Currencies", "id" : "1",
+"children": [
+{"name": "CHF","id" : "10", "type": "CCY", "size": 7074},
+{"name": "GBP","id" : "11", "type": "CCY", "size": 7074},
+{"name": "USD","id" : "12", "type": "CCY", "size": 7074}
+]
+}
+]
+}

@@ -1,0 +1,23 @@
+@()
+
+@appCss() = @{ "main.css" :: Nil}
+
+@appJs() = @{ "app.js" :: "bullet.js" :: Nil}
+
+@main(appCss(), appJs()) {
+
+<header ui-view="menu">
+    Leman Project
+</header>
+
+<main ui-view="main">
+    @bubble()
+</main>
+
+<footer ui-view="footer">
+    <div>
+    @graphPanel()
+    </div>
+</footer>
+
+}
